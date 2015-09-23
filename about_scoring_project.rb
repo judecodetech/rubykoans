@@ -31,6 +31,17 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 
 def score(dice)
   # You need to write this method
+  #fill initial throws
+  raise ArgumentError, "input not array" unless dice.is_a?(Array)
+  raise ArgumentError, "invalid array size" unless dice.size <= 5
+  raise ArgumentError, "invalid dice result" if dice.any? { |x| x<1 || x>6 }
+
+  result = 0
+  dice.uniq.each { |k|
+    result += ((dice.count(k) / 3) * 1000 + (dice.count(k) % 3) * 100) if k == 1
+    result += ((dice.count(k) / 3) * 100 * k + (dice.count(k) % 3) * ( k == 5 ? 50 : 0 )) if k != 1
+  }
+  result
 end
 
 class AboutScoringProject < Neo::Koan
